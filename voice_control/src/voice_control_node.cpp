@@ -1,10 +1,13 @@
 #include "ros/ros.h"
-#include "speech_recognition_msgs/SpeechRecognitionCandidates.h"
+#include "jsk_gui_msgs/VoiceMessage.h"
 
-void speechCallback(const speech_recognition_msgs::SpeechRecognitionCandidatesPtr& msg)
+void speechCallback(const jsk_gui_msgs::VoiceMessageConstPtr & msg)
 {
-  
-  ROS_INFO("I heard: [%s]", msg->transcript.size());
+  for (int i=0; i<msg->texts.size(); ++i)
+  {
+      ROS_INFO_STREAM("CMD" << i << ": " << msg->texts[i] );
+
+  }
 }
 
 int main(int argc, char **argv)
@@ -13,7 +16,8 @@ int main(int argc, char **argv)
   
   ros::NodeHandle nh;
   ros::Rate r(10);
-  ros::Subscriber speech_Sub = nh.subscribe("/Tablet/voice", 10, speechCallback);
+  ros::Subscriber speech_Sub = nh.subscribe("/Tablet/voice", 1000, speechCallback);
+  ROS_INFO("voice on");
   while(ros::ok())
   {
     
